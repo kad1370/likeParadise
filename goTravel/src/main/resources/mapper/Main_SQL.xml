@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.goTravel.main.service.impl.MainMapper">
+
+	<select id="selectMainServiceList" resultType="Map">
+	/** [Main_SQL.xml][com.project.goTravel.main.service.impl.MainMapper.selectMainServiceList"][숙소타입 데이터 조회][김지은]*/
+	SELECT  *
+	FROM T_SUKSO_MNG
+	WHERE SUKSO_TY_USE_YN = 'Y'
+	ORDER BY SORT_SEQ
+	</select>
+</mapper>

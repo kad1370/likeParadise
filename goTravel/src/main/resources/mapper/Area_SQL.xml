@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.goTravel.area.service.impl.AreaMapper">
+
+	<select id="selectAreaServiceList" resultType="Map">
+	/** [Area_SQL.xml][com.project.goTravel.area.service.impl.AreaMapper.selectAreaServiceList"][지역 데이터 조회][김지은]*/
+	SELECT  CAT_CD
+			,CAT_NM
+			,CAT_LV
+			,SORT_SEQ
+			,CNNT_URL
+			,UPPR_CAT
+	FROM T_REG_CAT
+	WHERE USE_YN = 'Y'
+	ORDER BY CAT_CD
+	</select>
+</mapper>

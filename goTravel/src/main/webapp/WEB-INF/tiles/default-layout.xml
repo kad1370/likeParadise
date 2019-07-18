@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC 
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" 
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd"> 
+ 
+<tiles-definitions>
+	<definition name="layouts-tiles" template="/WEB-INF/jsp/cmmn/default-layouts.jsp">
+	  	<put-attribute name="header"    	value="/WEB-INF/jsp/cmmn/default-header.jsp" />
+	  	<put-attribute name="head"    		value="/WEB-INF/jsp/cmmn/default-head.jsp" />
+	  	<put-attribute name="nav"    		value="/WEB-INF/jsp/cmmn/default-nav.jsp" />
+	  	<put-attribute name="content"   	value="" />
+	  	<put-attribute name="footer"    	value="/WEB-INF/jsp/cmmn/default-footer.jsp" />
+	</definition>
+	
+	<definition name="*/*.tiles" extends="layouts-tiles">
+	  	<put-attribute name="content"   value="/WEB-INF/jsp/{1}/{2}.jsp" />
+	</definition>
+	
+	<definition name="content-tiles" template="/WEB-INF/jsp/cmmn/content-layouts.jsp">
+	  	<put-attribute name="head"    		value="/WEB-INF/jsp/cmmn/default-head.jsp" />
+	  	<put-attribute name="nav"    		value="/WEB-INF/jsp/cmmn/default-nav.jsp" />
+	  	<put-attribute name="left"    		value="/WEB-INF/jsp/cmmn/default-left.jsp" />
+	  	<put-attribute name="pageHead"    	value="" />
+	  	<put-attribute name="content"   	value="" />
+	  	<put-attribute name="footer"    	value="/WEB-INF/jsp/cmmn/default-footer.jsp" />
+	</definition>
+	
+	<definition name="*/*.tiles2" extends="content-tiles">
+	  	<put-attribute name="content"   value="/WEB-INF/jsp/{1}/{2}.jsp" />
+	  	<put-attribute name="pageHead"   value="/WEB-INF/jsp/{1}/{2}_pageHead.jsp" />
+	</definition>
+	
+	<definition name="menuList-tiles" template="/WEB-INF/jsp/cmmn/menu-layouts.jsp">
+	  	<put-attribute name="head"    		value="/WEB-INF/jsp/cmmn/default-head.jsp" />
+	  	<put-attribute name="nav"    		value="/WEB-INF/jsp/cmmn/default-nav.jsp" />
+	  	<put-attribute name="pageHead"    	value="" />
+	  	<put-attribute name="content"   	value="" />
+	  	<put-attribute name="footer"    	value="/WEB-INF/jsp/cmmn/default-footer.jsp" />
+	</definition>
+	
+	<definition name="*/*.menu" extends="menuList-tiles">
+	  	<put-attribute name="content"   value="/WEB-INF/jsp/{1}/{2}.jsp" />
+	  	<put-attribute name="pageHead"   value="/WEB-INF/jsp/{1}/{2}_pageHead.jsp" />
+	</definition>
+
+	<definition name="join-tiles" template="/WEB-INF/jsp/cmmn/join-layouts.jsp">
+	  	<put-attribute name="head"    		value="/WEB-INF/jsp/cmmn/default-head.jsp" />
+	  	<put-attribute name="nav"    		value="/WEB-INF/jsp/cmmn/default-nav.jsp" />
+	  	<put-attribute name="pageHead"    	value="" />
+	  	<put-attribute name="content"   	value="" />
+	  	<put-attribute name="footer"    	value="/WEB-INF/jsp/cmmn/default-footer.jsp" />
+	</definition>
+	
+	<definition name="*/*.join" extends="join-tiles">
+	  	<put-attribute name="content"   value="/WEB-INF/jsp/{1}/{2}.jsp" />
+	  	<put-attribute name="pageHead"   value="/WEB-INF/jsp/{1}/{1}_pageHead.jsp" />
+	</definition>	
+</tiles-definitions>

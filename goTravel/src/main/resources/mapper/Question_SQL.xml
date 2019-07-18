@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.goTravel.question.service.impl.QuestionMapper">
+
+	<select id="selectQuestionListServiceList" parameterType="criteria" resultType="camelMap">
+	/** [Question_SQL.xml][com.project.goTravel.question.service.impl.QuestionMapper.selectQuestionListServiceList"][문의글 리스트 조회][김지은]*/
+	<![CDATA[
+	SELECT *
+	FROM (SELECT FORMAT(@ROWNUM := @ROWNUM + 1, 0) AS 'NUM'
+				, QUEST_MNG_NO
+				, QUEST_SUBJ
+				, QUEST_CAT_CD
+				, QUEST_CAT
+				, MBR_NM
+				, REG_DE
+		FROM T_QUEST_MNG
+			,(SELECT @ROWNUM := 0) RNUM 
+	WHERE DP_YN = 'Y') B
+	ORDER BY B.QUEST_MNG_NO desc
+		LIMIT #{pageStart}, #{perPageNum}
+	]]>
+	</select>
+	
+	<select id="countQuestionListTotal" resultType="Integer">
+	/** [Question_SQL.xml][com.project.goTravel.question.service.impl.QuestionMapper.countQuestionListTotal"][문의글 총 개수 조회][김지은]*/
+		SELECT COUNT(QUEST_MNG_NO) AS 'TOTCAT'
+		FROM T_QUEST_MNG
+		WHERE DP_YN = 'Y'
+	</select>
+	
+	<insert id="insertQuestionMngData" parameterType="map">
+	/** [Question_SQL.xml][com.project.goTravel.question.service.impl.QuestionMapper.insertQuestionMngData"][문의글 관리 데이터 insert][김지은]*/
+		<selectKey order="BEFORE" keyProperty="questMngNo" resultType="Integer">
+			select IFNULL (MAX(QUEST_MNG_NO),0) + 1 AS questMngNo
+			from T_QUEST_MNG
+		</selectKey>
+		INSERT INTO T_QUEST_MNG
+		(	
+			 QUEST_MNG_NO
+			,QUEST_SUBJ
+			,QUEST_CAT_CD
+			,QUEST_CAT
+			,MBR_NM
+			,REG_DE
+			,DP_YN
+			,REGR
+			,REG_DT
+			,UPDR
+			,UPD_DT
+			)
+			VALUES
+			(
+			#{questMngNo}
+			,#{questSubj}
+			,#{questCatCd}
+			,#{questCat}
+			,#{mbrNm}
+			,NOW()
+			,'Y'
+			,'SYSTEM'
+			,NOW()
+			,'SYSTEM'
+			,NOW()
+		)
+	</insert>
+	
+	<insert id="insertQuestionDtlData" parameterType="map">
+	/** [Question_SQL.xml][com.project.goTravel.question.service.impl.QuestionMapper.insertQuestionDtlData"][문의글 상세 데이터 insert][김지은]*/
+		<selectKey order="BEFORE" keyProperty="dtlSeq" resultType="Integer">
+			select 
+			IFNULL (MAX(DTL_SEQ),0) + 1 AS dtlSeq
+			from T_QUEST_DTL
+		</selectKey>
+		INSERT INTO T_QUEST_DTL
+		(	
+			 QUEST_MNG_NO
+			,DTL_SEQ
+			,QUEST_CONTS
+			,SORT_SEQ
+			,REGR
+			,REG_DT
+			,UPDR
+			,UPD_DT
+			)
+			VALUES
+			(
+			#{questMngNo}
+			,#{dtlSeq}
+			,#{questConts}
+			,#{dtlSeq}
+			,'SYSTEM'
+			,NOW()
+			,'SYSTEM'
+			,NOW()
+		)
+	</insert>	
+	
+	<select id="selectQuestionContsServiceInfo" parameterType="String" resultType="camelMap">
+	/** [Question_SQL.xml][com.project.goTravel.question.service.impl.QuestionMapper.selectQuestionContsServiceInfo"][문의글 상세 내용 조회][김지은]*/
+	SELECT * 
+	FROM T_QUEST_DTL
+	WHERE QUEST_MNG_NO = #{_parameter}
+	</select>
+	
+	<update id="saveChangedQuestionData" parameterType="map">
+	/** [Question_SQL.xml][com.project.goTravel.question.service.impl.QuestionMapper.saveChangedQuestionData"][문의글 상세 내용 수정][김지은]*/
+	UPDATE T_QUEST_DTL
+	SET QUEST_CONTS = #{changedData},
+		UPD_DT = NOW()
+	WHERE QUEST_MNG_NO = #{questMngNo}
+	</update>		
+	
+	<delete id="deleteQuestMngData" parameterType="String">
+	/** [Question_SQL.xml][com.project.goTravel.question.service.impl.QuestionMapper.deleteQuestMngData"][문의글 관리 데이터 삭제][김지은]*/
+	DELETE  
+	FROM T_QUEST_MNG
+	WHERE QUEST_MNG_NO = #{_parameter}
+	</delete>
+	
+	<delete id="deleteQuestDtlData" parameterType="String">
+	/** [Question_SQL.xml][com.project.goTravel.question.service.impl.QuestionMapper.deleteQuestDtlData"][문의글 상세 데이터 삭제][김지은]*/
+	DELETE  
+	FROM T_QUEST_DTL
+	WHERE QUEST_MNG_NO = #{_parameter}
+	</delete>		
+</mapper>
