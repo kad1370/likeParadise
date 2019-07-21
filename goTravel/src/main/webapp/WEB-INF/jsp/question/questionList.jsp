@@ -16,8 +16,7 @@ $(function(){
 	<!-- T_QNA_MNG 에서 데이터 조회해서 뿌려야함 -->
 	<!-- 언제뿌리나? : 네비게이터에서 qna를 클릭해서 qnaList가 로드될 때 -->
     <div class="row">
-      <div class="col-lg-8 mb-4">
-        	<table class="table table-hover table-bordered" id="questionTable" style="">
+        	<table class="table table-hover table-bordered" id="questionTable">
 				<thead>
 					<tr>
 					
@@ -42,37 +41,30 @@ $(function(){
 					</c:forEach>
 				</tbody>        	
         	</table>
-        	
-		    <hr>
-		
+    </div>
+    
 		    <!-- Pagination -->
 		    <ul class="pagination justify-content-center">
-		    <c:if test="${pageMaker.prev }">
 				    <li class="page-item">
 				        <a  class="page-link" aria-label="Previous" href='<c:url value="/questionList?page=${pageMaker.startPage}"/>'>
 				          <span aria-hidden="true">«</span>
 				          <span class="sr-only">Previous</span>		        
 				        </a>
 				    </li>
-			</c:if>    
 			    <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
 			    <li class="page-item">
 			        <a class="page-link" href='<c:url value="/questionList?page=${idx}"/>'><c:out value='${idx}'/></a>
 			    </li>
 			    </c:forEach>
-			    <c:if test="${pageMaker.next && pageMaker.endPage >0 }">
 				    <li class="page-item">
 				        <a class="page-link" aria-label="Next" href='<c:url value="/questionList?page=${pageMaker.endPage}"/>'>
 				          <span aria-hidden="true">»</span>
 				          <span class="sr-only">Next</span>		        
 				       </a>
 				    </li>
-			  </c:if>		    
-			</ul>   
-			
-   			<button class="dark-btn btn1" id="writeQnaBtn" onclick="location.href='writeQna'">글쓰기</button>						
-      </div>
-    </div>
+			</ul>
+			   
+   			<button class="dark-btn btn1" id="writeQnaBtn" onclick="location.href='writeQna'">글쓰기</button>		
     
 
     

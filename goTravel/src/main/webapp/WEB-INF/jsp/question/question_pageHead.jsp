@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
+	
+	<div class="card-body">
+	    <font size="10" face="돋움">Q/A</font>	
+	</div>
 
-    <h1 class="mt-4 mb-3"> 
-      <small>Q/A</small>
-    </h1>
+    
+     <hr>
     

@@ -6,14 +6,39 @@
  
 <script>
 
-$(function(){
-	
-	editorTargetObj.$textareaId = $("textarea").attr("id"),
-	editorTargetObj.$applyBtnId = $("button[name=등록]").attr("id");
-	
-	smartEditorInit.applySe2(editorTargetObj.$textareaId, editorTargetObj.$applyBtnId);
-	
+var oEditors = [];
 
+$(function(){
+    nhn.husky.EZCreator.createInIFrame({
+        oAppRef: oEditors,
+        
+        //textarea에서 지정한 id와 일치해야 합니다.
+        elPlaceHolder: "questContsInsert",  
+        
+        //SmartEditor2Skin.html 파일이 존재하는 경로
+        sSkinURI: "se2/SmartEditor2Skin.html",  
+        
+        /*
+        fOnAppLoad : function(){
+        	
+        	var org = new Array();
+        	org.push('${questDtlConts.questConts}');
+        	
+            //기존 저장된 내용의 text 내용을 에디터상에 뿌려주고자 할때 사용
+            oEditors.getById["questConts"].exec("PASTE_HTML", org);
+        },
+        */
+        
+        fCreator: "createSEditor2"
+    });
+    
+    //저장버튼 클릭시 form 전송
+    $("#submitQuestion").click(function(){
+    	
+    	// SmartEditor의 값을 Textarea로 전달 해주는 역할
+        oEditors.getById["questContsInsert"].exec("UPDATE_CONTENTS_FIELD", []);
+        qnaInit.insertFn();
+    });  
 });
 
 var qnaInit = {
@@ -77,12 +102,13 @@ var qnaInit = {
 						</tr>		
  					</tbody>
  				</table>
+		          
 
 		              <textarea rows="10" cols="100" class="form-control" name="questContsInsert" id="questContsInsert" maxlength="999" style="resize:none"></textarea>
 
     </div>
     	 <div class="card-body">	        
-		          <button class="dark-btn btn1" name="등록" id="submitQuestion">등록</button>
-		          <a href="questionList"><button class="white-btn" name="취소" id="cancelQuestion">취소</button></a>
+		          <button class="dark-btn btn1" id="submitQuestion">등록</button>
+		          <a href="questionList"><button class="white-btn" id="cancelQuestion">취소</button></a>
  		</div>
     
