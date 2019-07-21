@@ -80,7 +80,7 @@ public class QuestionController {
 	// [update & delete : T_QUEST_DTL] 문의글 상세 내용 수정 및 삭제
 	// application/json 은 stringify와 짝꿍이다. (함께 사용해야한다)
 	// 문자열이 객체로 ajax에 전달 되어 JSON.parse 없이 데이터 사용이 가능하다.
-	@RequestMapping(value="updateQuestionData")
+	@RequestMapping(value="updateQuestionData", produces="application/json; charset=utf-8")
 	
 	// ResponsBody는 post 방식의 ajax로 보낸 데이터를 받을 때 사용한다.
 	// post방식은 Http통신에서 body에 담겨 데이터가 전달이 되는데, ResponseBody는 body를 통째로 가져온다.

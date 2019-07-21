@@ -9,12 +9,12 @@
       </ol>
       <div class="carousel-inner" role="listbox">
         <!-- Slide One - Set the background image for this slide in the line below -->
-        <div class="carousel-item active" style="background-image: url('images/background/main1.png')">	
+        <div class="carousel-item active" style="background-image: url('images/background/test11.jpg')">	
           <div class="carousel-caption d-none d-md-block">
           </div>
         </div>
         <!-- Slide Two - Set the background image for this slide in the line below -->
-        <div class="carousel-item" style="background-image: url('images/background/main_02.jpg')">
+        <div class="carousel-item" style="background-image: url('images/background/test2.jpg')">
           <div class="carousel-caption d-none d-md-block">
           </div>
         </div>
