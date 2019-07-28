@@ -3,136 +3,251 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+ 
+ <script>
+ $(function() {
+	 
+	    // 디폴트 날짜 설정
+	    var date = new Date(); /* 현재 */
+	    date.setTime(date.getTime() + 1000 * 60 * 60 * 24); /* 타임스탬프 + 1000*60*60*24ms(=1일) */
+		
+	    
+	    // 체크인 데이트 피커 옵션
+	     $("#CheckIn").datepicker({
+	        onSelect: function(formattedDate, date, inst) {
+	        	makeDate(date, inst);
+	        	
+	        	var endDate = date;
+	        	endDate.setTime(date.getTime() + 1000 * 60 * 60 * 24);
+	        	
+	        	$("#CheckOut").datepicker({
+	        		minDate: endDate
+	        	});
+	        }
+	    });
+	    
+	     // 체크아웃 데이트 피커 옵션
+	     $("#CheckOut").datepicker({
+		        onSelect: function(formattedDate, date, inst) {
+		        	makeDate(date, inst);
+		        }
+		    });
+	     
+		    $("#CheckIn").datepicker().data('datepicker').selectDate(new Date());
+		    $("#CheckOut").datepicker().data('datepicker').selectDate(date);
+		    
+	});
+ 
+  function makeDate(date, inst) {
+ 	var dateData = {};
+ 	
+ 	dateData["selectMonth"] = date.getMonth() + 1,
+ 	dateData["selectDay"] = date.getDay(),
+ 	dateData["selectDate"] = date.getDate(), 
+ 	dateData["$targetId"] = inst.el.id;
+ 	
+ 	setDate(dateData);
+ } 
+ 
+  function setDate(dateData) {
+		 
+			 var $target = $("#" + dateData.$targetId).parent();
+			 // 월 데이터 넣기
+			 $target.children("span:eq(0)").text(dateData.selectMonth + "/");
+			 
+			 // 일 데이터 넣기
+			 $target.children("span:eq(1)").text(dateData.selectDate);
+			 
+			 // 요일 가져오고, 데이터 넣기
+			var dayArr = ["일","월","화","수","목","금","토"];
+			$target.children("span:eq(2)").text(dayArr[dateData.selectDay]);		 
+		
+	 }
+  
+//입력칸 빈칸 유효성 체크 메서드
+var validChk = {
+		
+		emptyValChkFn : function() {
+			
+			// 기본값 셋팅
+			var valid 		= false,
+				searchData 	= {};
+			
+			// 호텔선택 빈 값 확인
+			/*
+			if ($("#hotels").val().length === 0) {
+				alert("호텔을 선택하세요");
+				return;
+			} else {
+				// searchData["hotels"] = $("[name=hotels]").val();
+				$("[name=hotels]").val($("#hotels").val());	
+			}
+			*/
+			
+			// 체크인, 체크아웃 빈 값 확인
+			if ($("[name=checkDate]").val().length === 0) {
+				alert("날짜를 선택하세요");
+				return;
+			} else {
+				// 선택 한 경우에는 input 에 값을 넣어준다.
+				
+ 				$("[name=strtDate]").val($("#CheckIn").val());
+				$("[name=endDate]").val($("#CheckOut").val());
+				$("[name=person]").val($("#person").val());
+				
+				// $(".day:eq(0)").text($("#CheckIn").val());
+			}
+			
+			// 필수 값 체크에 이상이 없을 시 페이지 이동
+			valid = true;
+			
+			if (valid) {
+				$("#searchFrm").submit();
+			}
+			// ajax로 값을 보내 서버단에서 유효성 체크
+/* 			if (valid) {
+ 				$.ajax({
+					type : "POST",
+					url : "<c:out value='searchResult'/>",
+					data : {"searchData" : JSON.stringify(searchData)},
+					
+					success : function(searchResult){
+						
+					} 
+				});
+			} */
+		}
+}
 
+</script>
+<form id="searchFrm" action="searchResult">
+	<input type="hidden" name="strtDate"/>
+	<input type="hidden" name="endDate"/>
+	<input type="hidden" name="person"/>
+</form>
+
+	<!--================Booking Area =================-->
+	<section class="container">
+		<div class="booking_area">
+			<div class="row">
+					
+					<div class="col-lg-3 col-sm-6 col-6">
+						<div class="booking_item">
+							<p>Check - in</p>
+							<span class="day"></span>
+							<span class="day"></span>
+							<span class="month"></span>
+							<label for="CheckIn">
+								<i class="fa fa-angle-down"></i>
+							</label>					
+							<input type="text" class="form-control" name="checkDate" id="CheckIn">
+							</div>
+					</div>
+					
+						
+					<div class="col-lg-3 col-sm-6 col-6">
+						<div class="booking_item">
+							<p>Check - out</p>
+							<span class="day"></span>
+							<span class="day"></span>
+							<span class="month"></span>
+							<label for="CheckOut">
+								<i class="fa fa-angle-down"></i>
+							</label>
+							<input type="text" class="form-control" name="checkDate" id="CheckOut">
+						</div>
+					</div>
+					
+					<div class="col-lg-3 col-sm-6 col-6">
+						<div class="booking_item">
+							<p>Toatal guests</p>
+								<select class="day" id="person">
+									<option value="1">01</option>
+									<option value="2">02</option>
+									<option value="3">03</option>
+								</select>
+							<span class="month">person</span>	
+<!-- 							<span class="day">01</span>
+							<span class="month">person</span> -->
+						</div>
+					</div>
+					
+					<div class="col-lg-3 col-sm-6 col-6 coupon-code">
+						<div class="booking_item">
+							<button class="main_btn" onclick="validChk.emptyValChkFn()">Search</button>
+						</div>
+					</div>
+				</div>	
+		</div>
+	</section>
+	<!--================End Booking Area =================-->
+	
   <div class="container">
-  	<div style="margin-bottom:50px"></div>
-    <!-- search room -->
-    <div class="searchRoom row bg-black" style="margin-bottom:100px">
-    
-    <!-- 메인화면 입력 데이터 : 시작 -->
-    	<form id="searchFrm"> 
-    		<div id="fullData" >
-    			
-    			<!-- 목적지 입력 -->
-    			<div class="data1" style="float: left; margin-right:50px">
-	    			<div>
-	    				<select name="hotels" id="hotels" class="form-selects" style="float: left;">
-						    <option value="1">호텔을 선택하세요</option>
-						    <option value="2">Like paradise JEJU</option>
-						    <option value="3">Like paradise SEOUL</option>
-						    <option value="4">Like paradise BUSAN</option>
-						</select>
-	    			</div>
-    			</div>
- 				
- 				<!-- 예약일자 입력 -->
-     			<div class="data2" style="float: left; margin-right:50px">
-	    			<div>
-	    				<input id="strtDate" name="strtDate" class="form-selects" style="float: left;" placeholder="체크인" autocomplete=off>
-	    					<span style="float: left;"> - </span>
-	    				<input id="endDate" name="endDate" class="form-selects" placeholder="체크아웃" autocomplete=off >
-	    			</div>
-    			</div>
-    			
-    			<!-- 인원수 입력 -->
-     			<div class="data3" style="float: left; margin-right:50px">
-	    			<div>
-	    				<select name="adults" id="adults" class="form-selects" style="float: left;">
-						    <option value="1">성인 1명</option>
-						    <option value="2">성인 2명</option>
-						    <option value="3">성인 3명</option>
-						    <option value="4">성인 4명</option>
-						</select>
-	    			</div>
-    			</div>
-    			
-    			<!-- 제출버튼 -->
-    			<span class="input-group-btn">
-                	<button id="searchBtn" class="dark-btn btn1" style="width: 100px; height: 40px;" onclick="init.submitInitFn()">검색</button>
-              	</span>    			   			
-    		</div>
-    	</form>
-    <!-- 메인화면 입력 데이터 : 끝 -->
-	</div>
-    <!-- /.row -->
-    
-    <!-- Portfolio Section -->
-    <h2 class="my-4">Portfolio Heading</h2>
-
+  	<div style="margin-bottom:50px;"></div>
+    	<h2 class="my-4" style="text-align: center;">진행 중인 프로모션</h2>
+	<div style="margin-bottom:50px;"></div>
+   <!-- Portfolio Section -->
     <div class="row">
-      <div class="col-lg-4 portfolio-item">
-          <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-      </div>
-      <div class="col-lg-4 portfolio-item">
-          <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-      </div>
-      <div class="col-lg-4 portfolio-item">
-          <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-      </div>      
-      <div class="col-sm-6 portfolio-item">
-          <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-      </div>
-       <div class="col-sm-6 portfolio-item">
-          <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-      </div>     
+         <div class="col-lg-4 portfolio-item">
+            <div class="blog_post">
+                <a href="single-blog.html"> <img src="images/event/massage.jpg" alt="massage"></a>
+                <div class="blog_details">
+                   <h2>Paradise Spa</h2>
+                    <p>천연허브와 약초만을 사용해 전문가의 손길로 품격있는 스파 트리트먼트를 경험해보세요</p>
+                </div>
+            </div>
+        </div>
+         <div class="col-lg-4 portfolio-item">
+            <div class="blog_post">
+                 <a href="single-blog.html"><img src="images/event/privatePool.jpg" alt="privatePool"></a>
+                <div class="blog_details">
+                   <h2>Private Pool</h2>
+                    <p>아늑하고 프라이빗한 풀은 여유로운 휴식을 선사합니다<br>
+                    파노라믹 뷰로 펼쳐진 자연의 아름다움을 감상해보세요.</p>
+                </div>
+            </div>
+        </div>
+         <div class="col-lg-4 portfolio-item">
+            <div class="blog_post">
+                <img src="images/event/subbed.jpg" alt="subbed">
+                <div class="blog_details">
+                    <a href="single-blog.html">
+                        <h2>The Glossary Of Telescopes</h2>
+                    </a>
+                    <p>MCSE boot camps have its supporters and its detractors. Some people do not
+                        understand why you should have to spend money on boot camp when you can get
+                        the MCSE study materials yourself at a fraction.</p>
+                </div>
+            </div>
+        </div>     
+        <div class="col-sm-6 portfolio-item">
+            <div class="blog_post">
+                <img src="images/event/brunch.jpg" alt="brunchbrunch">
+                <div class="blog_details">
+                    <a href="single-blog.html">
+                        <h2>The Glossary Of Telescopes</h2>
+                    </a>
+                    <p>MCSE boot camps have its supporters and its detractors. Some people do not
+                        understand why you should have to spend money on boot camp when you can get
+                        the MCSE study materials yourself at a fraction.</p>
+                </div>
+            </div>
+        </div>   
+        <div class="col-sm-6 portfolio-item">
+            <div class="blog_post">
+                <img src="images/event/wine.jpg" alt="wine">
+                <div class="blog_details">
+                    <a href="single-blog.html">
+                        <h2>The Glossary Of Telescopes</h2>
+                    </a>
+                    <p>MCSE boot camps have its supporters and its detractors. Some people do not
+                        understand why you should have to spend money on boot camp when you can get
+                        the MCSE study materials yourself at a fraction.</p>
+                </div>
+            </div>
+        </div>     
     </div>
                    
     <!-- /.row -->
   </div>
 
-  <script>
-$(function(){
-	
-	// 예약일자 데이트피커 적용
-	$("#strtDate,#endDate").datepicker();
-
-});
-
-//입력칸 빈칸 유효성 체크 메서드
-var validChk = {
-		
-		emptyValChk : function() {
-			
-			var valid = false;
-			
-			$("#fullData").find("input").each(function() {
-				var $this = $(this);
-				
-				// console.log("***", $this.attr("id"));
-				
-				if ($this.val() === "") {
-					alert("빈 값이 있습니다.");
-					
-					valid = false;
-					return valid;
-					
-				} else {
-					valid = true;
-				}
-			});
-			
-			return valid;
-		}
-}
-
-// 입력 데이터 submit
-var init = {
-		
-		// 입력 데이터 제출 메서드 (go버튼 클릭 시 호출)
-		submitInitFn : function() {
-			
-			// 빈 값 체크 결과가 false인 경우 if문이 true가 되면서
-			// 구현부 안에 있는 return이 실행되어 submit 되지 않는다.
-			
-			/*
-			if (!validChk.emptyValChk()) {
-				return;
-			} 
-			*/
-			// 빈 값이 없는 경우 submit
-			$("#searchFrm").attr("action", "content.do");
-			$("#searchFrm").submit();
-		}
-}
-
-</script>
